@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hangman Odyssey 🎮
+
+A modern, minimal, and responsive Hangman game built with **Next.js (App Router)**, **TypeScript**, and **Tailwind CSS**. It features multiple word categories, hints, scoring, visual feedback, dark mode integration, and keyboard support.
+
+---
+
+## Features
+
+- 🧠 **Predefined Categories**: Play words from fields like *Programming*, *Astronomy*, *Geography*, *Animals*, and *Food & Drink*.
+- 💡 **Interactive Hints**: Expandable clues to aid guessing when stuck.
+- 🎯 **Tactile Virtual Keyboard**: Responsive layout matching QWERTY standards, color-coded for correct (green) and incorrect (faded/strike-through) letters.
+- ⌨️ **Physical Keyboard Support**: Detects and registers alphanumeric keyboard inputs natively on desktop.
+- 💖 **Animated Hangman & Lives**: Smoothly animates drawing parts and shows live statuses as cute heart tokens.
+- 💾 **Score Persistence**: Scoreboard (Wins & Losses) is saved in the browser's `localStorage` and automatically loaded on return.
+- 🌗 **Premium Dark/Light Mode Adaptability**: Tailored colors and subtle neon gradients fit system dark preferences automatically.
+- 🔄 **Action Control Center**: Quickly retry the current word or fetch a new random one.
+
+---
+
+## Folder Structure
+
+```text
+/
+├── app/
+│   ├── globals.css          # Tailwind configurations, custom animations & theme
+│   ├── layout.tsx           # Global layout & metadata SEO tag configuration
+│   └── page.tsx             # Hangman game state machine & layout builder
+├── components/
+│   ├── HangmanDrawing.tsx   # SVG Renderer for hangman gallows and character parts
+│   ├── WordDisplay.tsx      # Underscore generator and letter reveal boxes
+│   ├── Keyboard.tsx         # Responsive virtual QWERTY keyboard buttons
+│   ├── GameStats.tsx        # Scores, heart indicators, and incorrect list display
+│   ├── GameControls.tsx     # Categories, hints, restart, and next word triggers
+│   └── GameStatusBanner.tsx # Win/Lose conditional overlays and results
+├── constants/
+│   └── words.ts             # Default parameters and secret word bank
+├── types/
+│   └── index.ts             # TypeScript definitions for states, scores, and words
+└── utils/
+    └── gameHelpers.ts       # Standalone mathematical/logical game helper validations
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
+### 1. Installation
+Install project dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Run the Development Server
+Start the Next.js local server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to play!
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Production Build
+Verify code types and compile the optimized production package:
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Customizing Word Bank
+To add your own secret words or categories, open `constants/words.ts` and append items to the `WORD_LIST` array following this structure:
 
-To learn more about Next.js, take a look at the following resources:
+```typescript
+{
+  word: 'YOURWORD', // Must be uppercase alphabetic letters only
+  category: 'Your Category Name',
+  hint: 'A helpful description or clue for the player.'
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Game State Utility Functions
+All isolated calculations are defined inside `utils/gameHelpers.ts`:
+- **`getRandomWord(currentWord?: string)`**: Pulls a random item from the list while ensuring the game avoids repeating the same word back-to-back.
+- **`getIncorrectGuesses(word: string, guessedLetters: string[])`**: Calculates incorrect guesses.
+- **`isWordComplete(word: string, guessedLetters: string[])`**: Scans the letters to verify if the puzzle is fully solved.
+- **`getGameStatus(...)`**: Resolves if current status is `'playing'`, `'won'`, or `'lost'`.
